@@ -34,3 +34,10 @@ func NewWorkerAppRegistry() (*WorkerAppRegistry, error) {
 		Consumer: natsConsumer,
 	}, nil
 }
+
+// NewMockWorkerAppRegistry creates a WorkerAppRegistry with a MockConsumer for testing.
+func NewMockWorkerAppRegistry() *WorkerAppRegistry {
+	return &WorkerAppRegistry{
+		Consumer: services.NewMockConsumer(),
+	}
+}

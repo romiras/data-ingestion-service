@@ -2,7 +2,6 @@ package services
 
 import (
 	"log"
-	"time"
 )
 
 // MockConsumer is a mock implementation of the Consumer interface.
@@ -20,23 +19,16 @@ func NewMockConsumer() *MockConsumer {
 }
 
 // Subscribe simulates subscribing to a topic.
+// It returns the internal message channel, allowing tests to manually push messages.
 func (m *MockConsumer) Subscribe(topic string) (<-chan []byte, error) {
 	log.Printf("MOCK CONSUMER: Subscribing to topic '%s'\n", topic)
-	// Simulate receiving messages
-	go func() {
-		ticker := time.NewTicker(5 * time.Second)
-		defer ticker.Stop()
-		for {
-			select {
-			case <-ticker.C:
-				msg := []byte(`{"data": "hello from mock consumer"}`)
-				m.messages <- msg
-			case <-m.done:
-				return
-			}
-		}
-	}()
+	// No ticker, messages must be pushed manually in tests.
 	return m.messages, nil
+}
+
+// SendMessage allows tests to manually inject a message into the consumer's channel.
+func (m *MockConsumer) SendMessage(message []byte) {
+	m.messages <- message
 }
 
 // Close simulates closing the consumer.

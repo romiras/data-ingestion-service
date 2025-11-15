@@ -36,3 +36,10 @@ func NewServerAppRegistry() (*ServerAppRegistry, error) {
 		Producer: natsProducer,
 	}, nil
 }
+
+// NewMockServerAppRegistry creates a ServerAppRegistry with a MockProducer for testing.
+func NewMockServerAppRegistry() *ServerAppRegistry {
+	return &ServerAppRegistry{
+		Producer: services.NewMockProducer(),
+	}
+}
