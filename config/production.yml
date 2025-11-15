@@ -1,0 +1,3 @@
+LOG_LEVEL: warn
+NATS_URL: nats://nats:4222
+GIN_MODE: release

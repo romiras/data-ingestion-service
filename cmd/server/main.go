@@ -1,17 +1,17 @@
 package main
 
 import (
+	"log"
+
 	"play.ground/generic-data-collector/internal/registries"
 	"play.ground/generic-data-collector/internal/routes"
-	"log"
 )
 
 func main() {
-	registry, err := registries.NewRegistry()
+	registry, err := registries.NewServerAppRegistry()
 	if err != nil {
-		log.Fatalf("Failed to initialize registry: %v", err)
+		log.Fatalf("Failed to initialize server registry: %v", err)
 	}
-	defer registry.Close()
 
 	routes.Run(registry)
 }

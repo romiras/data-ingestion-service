@@ -2,15 +2,16 @@ package handlers
 
 import (
 	"encoding/json"
-	"play.ground/generic-data-collector/internal/registries"
 	"log"
 	"net/http"
+
+	"play.ground/generic-data-collector/internal/registries"
 
 	"github.com/gin-gonic/gin"
 )
 
 // PostMetric is the handler for posting a new metric.
-func PostMetric(c *gin.Context, registry *registries.AppRegistry) {
+func PostMetric(c *gin.Context, registry *registries.ServerAppRegistry) {
 	var data map[string]interface{}
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

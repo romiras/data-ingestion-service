@@ -1,19 +1,20 @@
 package routes
 
 import (
+	"log"
+
 	"play.ground/generic-data-collector/internal/handlers"
 	"play.ground/generic-data-collector/internal/registries"
-	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Run starts the HTTP server.
-func Run(registry *registries.AppRegistry) {
+func Run(registry *registries.ServerAppRegistry) {
 	router := gin.Default()
 
 	// Helper function to pass registry to handlers
-	withRegistry := func(handler func(*gin.Context, *registries.AppRegistry)) gin.HandlerFunc {
+	withRegistry := func(handler func(*gin.Context, *registries.ServerAppRegistry)) gin.HandlerFunc {
 		return func(c *gin.Context) {
 			handler(c, registry)
 		}

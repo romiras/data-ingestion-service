@@ -18,3 +18,6 @@ FROM alpine:latest
 # Copy the compiled binaries from the builder stage
 COPY --from=builder /app/server /app/server
 COPY --from=builder /app/consumer /app/consumer
+COPY config /app/config
+
+WORKDIR /app

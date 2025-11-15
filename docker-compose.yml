@@ -1,12 +1,4 @@
 services:
-  # redis:
-  #   image: redis:7-alpine
-  #   restart: always
-  #   ports:
-  #     - '16379:6379'
-  #   volumes:
-  #     - redis_data:/data
-
   nats:
     image: nats:2-alpine
     restart: always
@@ -30,6 +22,3 @@ services:
     command: /app/consumer
     depends_on:
       - nats
-
-volumes:
-  redis_data:
