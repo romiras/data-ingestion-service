@@ -1,0 +1,35 @@
+services:
+  # redis:
+  #   image: redis:7-alpine
+  #   restart: always
+  #   ports:
+  #     - '16379:6379'
+  #   volumes:
+  #     - redis_data:/data
+
+  nats:
+    image: nats:2-alpine
+    restart: always
+    ports:
+      - '4222:4222'
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /app/server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - nats
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /app/consumer
+    depends_on:
+      - nats
+
+volumes:
+  redis_data:
