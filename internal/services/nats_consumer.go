@@ -26,7 +26,7 @@ func NewNATSConsumer(url string) (interfaces.Consumer, error) {
 
 // Subscribe starts listening to a given topic and returns a Go channel
 // from which message payloads can be read.
-func (c *NATSConsumer) Subscribe(topic string) (<-chan []byte, error) {
+func (c *NATSConsumer) Subscribe(topic string) (<-chan interfaces.Message, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -39,14 +39,14 @@ func (c *NATSConsumer) Subscribe(topic string) (<-chan []byte, error) {
 	}
 	c.subs = append(c.subs, sub)
 
-	// Channel for []byte to return to the caller
-	dataCh := make(chan []byte, 64)
+	// Channel for interfaces.Message to return to the caller
+	dataCh := make(chan interfaces.Message, 64)
 
 	// Goroutine to transfer message data from nats.Msg channel to the data channel.
 	go func() {
 		defer close(dataCh)
 		for msg := range natsMsgCh {
-			dataCh <- msg.Data
+			dataCh <- NewNATSMessage(msg)
 		}
 	}()
 

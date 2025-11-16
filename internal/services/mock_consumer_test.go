@@ -30,13 +30,14 @@ func TestMockConsumer_WorkerSimulation(t *testing.T) {
 	go func() {
 		for msg := range msgChan {
 			// This is the exact logic from cmd/consumer/main.go
-			fmt.Printf("Received message: %s\n", string(msg))
+			fmt.Printf("Received message: %s\n", string(msg.Data()))
 		}
 		close(done)
 	}()
 
 	// 4. Inject a dummy message
-	dummyMessage := []byte(`{"value": 42}`)
+	// dummyMessage := []byte(`{"value": 42}`)
+	dummyMessage := services.NewNonAckPubSubMessage([]byte(`{"value": 42}`))
 	mockConsumer.SendMessage(dummyMessage)
 
 	// Give the goroutine a moment to process the message
@@ -51,7 +52,7 @@ func TestMockConsumer_WorkerSimulation(t *testing.T) {
 	output := string(out)
 
 	// 7. Assert the output
-	expectedOutput := fmt.Sprintf("Received message: %s\n", string(dummyMessage))
+	expectedOutput := fmt.Sprintf("Received message: %s\n", string(dummyMessage.Data()))
 	assert.Contains(t, output, expectedOutput, "Stdout should contain the processed message")
 
 	// 8. Cleanup

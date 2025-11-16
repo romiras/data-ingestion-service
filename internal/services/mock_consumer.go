@@ -2,32 +2,33 @@ package services
 
 import (
 	"log"
+
+	"play.ground/generic-data-collector/internal/interfaces"
 )
 
 // MockConsumer is a mock implementation of the Consumer interface.
 type MockConsumer struct {
-	messages chan []byte
+	messages chan interfaces.Message
 	done     chan struct{}
 }
 
 // NewMockConsumer creates a new MockConsumer.
 func NewMockConsumer() *MockConsumer {
 	return &MockConsumer{
-		messages: make(chan []byte, 10),
+		messages: make(chan interfaces.Message, 10),
 		done:     make(chan struct{}),
 	}
 }
 
 // Subscribe simulates subscribing to a topic.
 // It returns the internal message channel, allowing tests to manually push messages.
-func (m *MockConsumer) Subscribe(topic string) (<-chan []byte, error) {
+func (m *MockConsumer) Subscribe(topic string) (<-chan interfaces.Message, error) {
 	log.Printf("MOCK CONSUMER: Subscribing to topic '%s'\n", topic)
-	// No ticker, messages must be pushed manually in tests.
 	return m.messages, nil
 }
 
 // SendMessage allows tests to manually inject a message into the consumer's channel.
-func (m *MockConsumer) SendMessage(message []byte) {
+func (m *MockConsumer) SendMessage(message interfaces.Message) {
 	m.messages <- message
 }
 
