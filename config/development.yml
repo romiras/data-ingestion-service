@@ -1,2 +1,3 @@
 LOG_LEVEL: debug
 NATS_URL: nats://nats:4222
+RUN_WITH_BATCHES: true

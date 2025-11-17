@@ -10,13 +10,15 @@ import (
 )
 
 type WorkerAppRegistry struct {
-	Config   *viper.Viper
-	Consumer interfaces.Consumer
+	Config         *viper.Viper
+	Consumer       interfaces.Consumer
+	BatchProcessor *services.BatchProcessor
 }
 
 func NewWorkerAppRegistry() (*WorkerAppRegistry, error) {
 	env := getEnv()
 	config := initializers.NewConfig(env)
+
 	natsUrl := config.GetString("NATS_URL")
 	if natsUrl == "" {
 		log.Printf("NATS_URL not set in config, using default: %s", DefaultNATSUrl)
@@ -29,15 +31,20 @@ func NewWorkerAppRegistry() (*WorkerAppRegistry, error) {
 		return nil, err
 	}
 
+	batchProcessor := services.NewBatchProcessor(natsConsumer)
+
 	return &WorkerAppRegistry{
-		Config:   config,
-		Consumer: natsConsumer,
+		Config:         config,
+		Consumer:       natsConsumer,
+		BatchProcessor: batchProcessor,
 	}, nil
 }
 
 // NewMockWorkerAppRegistry creates a WorkerAppRegistry with a MockConsumer for testing.
 func NewMockWorkerAppRegistry() *WorkerAppRegistry {
+	mockConsumer := services.NewMockConsumer()
 	return &WorkerAppRegistry{
-		Consumer: services.NewMockConsumer(),
+		Consumer:       mockConsumer,
+		BatchProcessor: services.NewBatchProcessor(mockConsumer),
 	}
 }
