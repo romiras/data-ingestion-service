@@ -4,6 +4,17 @@ services:
     restart: always
     ports:
       - '4222:4222'
+    volumes:
+      - ./nats_data:/data
+
+  nats_jetstream:
+    image: nats:2-alpine
+    restart: always
+    ports:
+      - '4222:4222'
+    command: -js
+    volumes:
+      - ./nats_jetstream_data:/data
 
   server:
     build:
@@ -22,3 +33,7 @@ services:
     command: /app/consumer
     depends_on:
       - nats
+
+volumes:
+  nats_data:
+  nats_jetstream_data:

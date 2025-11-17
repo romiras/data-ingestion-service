@@ -2,3 +2,4 @@ LOG_LEVEL: warn
 NATS_URL: nats://nats:4222
 GIN_MODE: release
 RUN_WITH_BATCHES: true
+NATS_STREAM_NAME: metrics

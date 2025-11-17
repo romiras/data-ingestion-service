@@ -20,3 +20,25 @@ func NewNATSMessage(natsMsg *nats.Msg) interfaces.Message {
 	// cloned := *natsMsg // Shallow copy; deep copy Data if needed for safety
 	return NATSMessage{msg: natsMsg}
 }
+
+// AckNATSMessage wraps a nats.Msg for acknowledgable pub/sub use.
+type AckNATSMessage struct {
+	NATSMessage
+}
+
+func (m *AckNATSMessage) Ack() error {
+	// AckSync ensures the server has processed the ACK.
+	return m.msg.AckSync()
+}
+
+func (m *AckNATSMessage) Nack() error {
+	// Nak() tells JetStream to not redeliver this message.
+	// If the stream is configured with a DLQ, it will go there.
+	return m.msg.Nak()
+}
+
+func NewAckNATSMessage(natsMsg *nats.Msg) interfaces.AckMessage {
+	return &AckNATSMessage{
+		NATSMessage: NATSMessage{msg: natsMsg},
+	}
+}
